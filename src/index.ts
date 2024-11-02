@@ -5,13 +5,14 @@ import { init, transcribe } from 'tafrigh';
 
 import { TafrighFlags } from './types.js';
 import { name, version } from './utils/constants.js';
-import { mapFileOrUrlToInputSource, mapFlagsToOptions } from './utils/optionsMapping.js';
+import { mapFileOrUrlsToInputSources, mapFlagsToOptions } from './utils/optionsMapping.js';
 import { getCliArgs } from './utils/prompt.js';
 
 const main = async () => {
     welcome({
         bgColor: `#FADC00`,
         bold: true,
+        clear: false,
         color: `#000000`,
         title: name,
         version,
@@ -27,9 +28,10 @@ const main = async () => {
 
     init(initOptions);
 
-    const inputSources = await mapFilesOrUrlsToInputSources(cli.input);
+    const inputSources = await mapFileOrUrlsToInputSources(cli.input);
+    console.log('inputSorces', inputSources);
 
-    const result = await transcribe(inputSource, transcribeOptions);
+    const result = await transcribe(Object.values(inputSources)[0], transcribeOptions);
 
     if (result) {
         console.log(`${logSymbols.success} written ${result}`);

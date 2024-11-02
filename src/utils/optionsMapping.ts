@@ -1,11 +1,13 @@
 import ytdl from '@distube/ytdl-core';
+import ytpl from '@distube/ytpl';
 import getFbVideoInfo from 'fb-downloader-scrapper';
-import { Result } from 'meow';
+import { promises as fs } from 'fs';
 import path from 'node:path';
 import { URL } from 'node:url';
 import { TafrighOptions, TranscribeFilesOptions } from 'tafrigh';
 
 import { TafrighFlags } from '../types.js';
+import { filterMediaFiles } from './io.js';
 
 export const urlToFilename = (urlString: string): string => {
     const url = new URL(urlString);
@@ -53,20 +55,59 @@ export const mapFlagsToOptions = ({
     ];
 };
 
-export const mapFileOrUrlToInputSource = async (inputs: string[]): Promise<Record<string, null | string>> => {
-    let [inputSource] = inputs;
+/**
+ * If the url contains a playlist, it will return all the videos in the playlist, otherwise just the url back
+ * @param url
+ */
+const unpackVideosInPlaylist = async (url: string): Promise<string[]> => {
+    if (url.includes('youtube.com/playlist?list=')) {
+        const info = await ytpl(url);
+        return info.items.map((video) => (video as any).shortUrl as string);
+    }
+
+    return [url];
+};
+
+export const mapFileOrUrlsToInputSources = async (inputs: string[]): Promise<Record<string, string>> => {
+    const idToInputSource: Record<string, string> = {};
+
     for (let input of inputs) {
+        if (isValidUrl(input)) {
+            const videoUrls = await unpackVideosInPlaylist(input);
+
+            for (let url of videoUrls) {
+                if (ytdl.validateURL(url)) {
+                    const info = await ytdl.getInfo(url);
+                    const videoId: any = info.player_response.videoDetails.videoId;
+                    idToInputSource[videoId] = ytdl.chooseFormat(info.formats, {
+                        quality: '134',
+                    }).url;
+                } else if (url.includes('facebook.com')) {
+                    const info = await getFbVideoInfo(url);
+                    idToInputSource[urlToFilename(url)] = info.sd || info.hd;
+                }
+            }
+        } else {
+            const info = await fs.stat(input);
+
+            if (info.isFile()) {
+                const parsed = path.parse(path.resolve(input));
+                idToInputSource[parsed.name] = input;
+            } else if (info.isDirectory()) {
+                const files = await fs.readdir(input);
+                const mediaFiles = filterMediaFiles(files)
+                    .map((file) => path.join(input, file))
+                    .map((file) => path.resolve(file));
+
+                for (let mediaFile of mediaFiles) {
+                    const parsed = path.parse(path.resolve(path.join(mediaFile)));
+                    idToInputSource[parsed.name] = mediaFile;
+                }
+            } else {
+                console.warn(`Skipping ${input}`);
+            }
+        }
     }
 
-    if (ytdl.validateURL(inputSource)) {
-        const info = await ytdl.getInfo(inputSource);
-        let format = ytdl.chooseFormat(info.formats, { quality: '134' });
-
-        inputSource = format.url;
-    } else if (inputSource.includes('facebook.com')) {
-        const info = await getFbVideoInfo(inputSource);
-        inputSource = info.sd || info.hd;
-    }
-
-    return inputSource;
+    return idToInputSource;
 };

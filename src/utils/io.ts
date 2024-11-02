@@ -1,6 +1,6 @@
 import mime from 'mime-types';
 
-export const filterMediaFiles = (paths: string): string[] => {
+export const filterMediaFiles = (paths: string[]): string[] => {
     const filteredMediaFiles: string[] = [];
     for (const filePath of paths) {
         const mimeType = mime.lookup(filePath);

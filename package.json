@@ -28,6 +28,7 @@
     "license": "MIT",
     "dependencies": {
         "@distube/ytdl-core": "^4.15.1",
+        "@distube/ytpl": "^1.2.1",
         "cli-welcome": "^3.0.0",
         "conf": "^13.0.1",
         "fb-downloader-scrapper": "^2.0.0",
