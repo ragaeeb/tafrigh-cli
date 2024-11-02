@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "NodeNext",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "declaration": true,
+        "sourceMap": true,
+        "moduleResolution": "nodenext",
+        "isolatedModules": true,
+        "resolveJsonModule": true,
+        "outDir": "./dist",
+        "rootDir": "./src"
+    },
+    "include": ["src/**/*", "testing/e2e.test.ts"],
+    "exclude": ["node_modules", "**/*.test.ts"]
+}

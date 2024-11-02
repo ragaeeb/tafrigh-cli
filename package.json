@@ -1,0 +1,55 @@
+{
+    "name": "tafrigh-cli",
+    "version": "1.0.0",
+    "description": "CLI for using the tafrigh library.",
+    "source": "src/index.ts",
+    "main": "dist/main.js",
+    "bin": {
+        "tafrigh-cli": "./dist/index.js"
+    },
+    "type": "module",
+    "scripts": {
+        "start": "bun run src/index.ts",
+        "build": "NODE_ENV=production bun build src/index.ts --outdir dist --target node --packages=external",
+        "compile": "NODE_ENV=production bun build src/index.ts --target node --compile --outfile dist/tafrigh-cli"
+    },
+    "files": [
+        "dist/index.js"
+    ],
+    "keywords": [
+        "srt",
+        "transcription",
+        "transcript",
+        "tafrigh",
+        "video",
+        "nodejs"
+    ],
+    "author": "Ragaeeb Haq",
+    "license": "MIT",
+    "dependencies": {
+        "@distube/ytdl-core": "^4.15.1",
+        "cli-welcome": "^3.0.0",
+        "conf": "^13.0.1",
+        "fb-downloader-scrapper": "^2.0.0",
+        "log-symbols": "^7.0.0",
+        "meow": "^13.2.0",
+        "mime-types": "^2.1.35",
+        "picocolors": "^1.1.1",
+        "tafrigh": "^2.0.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.14.0",
+        "@semantic-release/changelog": "^6.0.3",
+        "@types/eslint__js": "^8.42.3",
+        "@types/mime-types": "^2.1.4",
+        "@types/node": "^22.8.6",
+        "eslint": "^9.14.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-import": "^2.31.0",
+        "eslint-plugin-perfectionist": "^3.9.1",
+        "eslint-plugin-prettier": "^5.2.1",
+        "prettier": "^3.3.3",
+        "semantic-release": "^24.2.0",
+        "typescript-eslint": "^8.12.2"
+    }
+}
