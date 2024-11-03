@@ -15,5 +15,6 @@ export const getApiKeys = (language: string): string[] => {
 };
 
 export const saveApiKeys = (language: string, keys: string[]) => {
+    console.log('saving', keys);
     config.set(`${language}_keys`, keys);
 };

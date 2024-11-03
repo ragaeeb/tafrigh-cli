@@ -14,10 +14,6 @@ export const getCliArgs = (): any => {
             shortflag: 'c',
             type: 'number',
         },
-        ext: {
-            shortflag: 'e',
-            type: 'string',
-        },
         keys: {
             default: [],
             isMultiple: true,
@@ -33,12 +29,14 @@ export const getCliArgs = (): any => {
             type: 'string',
         },
         output: {
+            isRequired: true,
             shortflag: 'o',
             type: 'string',
         },
     };
 
     const result = meow(HELP_TEXT, {
+        allowUnknownFlags: false,
         flags: myFlags as any,
         importMeta: import.meta,
     });
