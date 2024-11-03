@@ -4,79 +4,95 @@
 [![Node.js CI](https://github.com/ragaeeb/tafrigh-cli/actions/workflows/build.yml/badge.svg)](https://github.com/ragaeeb/tafrigh-cli/actions/workflows/build.yml)
 ![GitHub License](https://img.shields.io/github/license/ragaeeb/tafrigh-cli)
 ![GitHub Release](https://img.shields.io/github/v/release/ragaeeb/tafrigh-cli)
-[![Size](https://deno.bundlejs.com/badge?q=tafrigh-cli@1.0.0&badge=detailed)](https://bundlejs.com/?q=tafrigh-cli%401.0.0)
 ![typescript](https://badgen.net/badge/icon/typescript?icon=typescript&label&color=blue)
 
-`tafrigh-cli` is a command-line interface built to interact with the [substract](https://github.com/ragaeeb/substract) library, which enables efficient extraction of hard-coded subtitles from video files. This CLI leverages the `substract` library's powerful OCR-based subtitle extraction features, making it straightforward to integrate with video processing workflows directly from the command line.
-
-## Table of Contents
-
--   ## Features
--   ## Installation
--   ## Usage
--   ## Commands
--   ## Options
--   ## Requirements
--   ## License
+A Command Line Interface (CLI) for using the [tafrigh](https://github.com/ragaeeb/tafrigh) library, enabling transcription of audio and video files, including YouTube videos, Facebook videos, and local media files.
 
 ## Features
 
--   **Subtitle Extraction**: Retrieves embedded subtitles from video files using OCR technology.
--   **User-Friendly CLI**: Simplified commands to streamline the subtitle extraction process.
--   **Configurable Options**: Control extraction parameters such as frame frequency, duplicate text filtering, and OCR paths directly through CLI options.
--   **Enhanced Logging**: Real-time feedback on extraction progress, including OCR and frame processing.
+    •	Transcribe audio and video files.
+    •	Support for YouTube videos and playlists.
+    •	Support for Facebook videos.
+    •	Support for local media files and directories.
+    •	Customizable chunk duration for splitting audio.
+    •	Concurrent processing with adjustable number of threads.
+    •	API key management for wit.ai.
+    •	Language-specific API key mapping.
+    •	Detailed logging of the transcription process.
 
 ## Installation
 
-To install the `Substract CLI`, ensure you have Node.js version 20.0.0 or later.
+You can install tafrigh-cli globally using npm:
 
-```bash
+```sh
 npm install -g tafrigh-cli
 ```
 
-Or
+Alternatively, you can use npx to run it without installing:
 
-```bash
-npx tafrigh-cli
+```sh
+npx tafrigh-cli [options]
 ```
 
 ## Usage
 
-To use the CLI, run the following command with the required arguments:
-
-```bash
-tafrigh-cli [options]
-```
-
-Example:
-
-```bash
-tafrigh-cli path/to/video.mp4 --output path/to/output.json --frequency 5
-
-# outputs 123456.txt
-tafrigh-cli "https://www.facebook.com/watch/?v=123456"
-
-# outputs TKdI.txt
-tafrigh-cli "https://www.youtube.com/watch?v=TKdI"
+```sh
+npx tafrigh-cli [options] [inputs]
 ```
 
 ## Options
 
-| Option                | Type   | Description                                                                                                                                                                                                                               |
-| --------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--apple-binary-path` | string | The path to the OCR engine compiled for the Apple environment. If this is set at least once, the cli will reuse this value next time even if it is not provided. You can get a copy from [here](https://github.com/glowinthedark/macOCR). |
-| `--concurrency`       | number | The number of threads to use to process the OCR.                                                                                                                                                                                          |
-| `--frequency`         | number | The frequency in seconds after which to extract a frame for subtitles.                                                                                                                                                                    |
-| `--bottom`            | number | The number of pixels from the bottom of the video to crop to extract the subtitles.                                                                                                                                                       |
-| `--top`               | number | The number of pixels from the top of the video to crop to extract the subtitles.                                                                                                                                                          |
-| `--left`              | number | The number of pixels from the left of the video to crop to extract the subtitles.                                                                                                                                                         |
-| `--right`             | number | The number of pixels from the right of the video to crop to extract the subtitles.                                                                                                                                                        |
-| `--output-file`       | number | The output file to write the extracted subtitles to. This can have a .json or .txt extension. If this is omitted, the output file will be a .txt file in the same directory as the input.                                                 |
+Option Alias Description
+`–chunk-duration` `-d` The duration (in seconds) for splitting the audio into chunks. Useful for producing smaller segments. Default is 300 seconds.
+`–concurrency` `-c` The number of threads to use for processing the OCR. Higher values increase CPU usage.
+`–keys` `-k` The API keys for wit.ai. Provide multiple keys by repeating the flag. Once set, keys are saved and do not need to be provided again. Can be mapped to specific languages using the `–language` flag.
+`–language` `-l` The language code to map specific API keys. Allows different API keys for different languages. Default is `global`, representing universal API keys.
+`–output` `-o` The output file or directory for the transcriptions. If transcribing a single media file, specify a file with a `.txt` or `.json` extension. For multiple medias, specify a directory.
 
-## Requirements
+## Inputs
 
--   **Node.js v20.0.0+**
+You can provide multiple inputs to `tafrigh-cli`, including:
+
+    •	YouTube videos and playlists.
+    •	Facebook videos.
+    •	Local media files.
+    •	Directories containing media files.
+
+## Examples
+
+Transcribe a local video file with specified API keys:
+
+```sh
+npx tafrigh-cli “tmp/video.mp4” –output “./transcript.txt” –keys “ABCD” –keys “EFG”
+```
+
+After setting the API keys, you can run without specifying them again:
+
+```sh
+npx tafrigh-cli “tmp/video.mp4” –output “./transcript.txt”
+```
+
+Transcribe a YouTube playlist with language-specific API keys:
+
+```sh
+npx tafrigh-cli “https://www.youtube.com/playlist?list=abcd” –output “./output_folder/1.txt” –language ar –keys “XYZ”
+```
+
+Next time, run using the saved language-specific API keys:
+
+```sh
+npx tafrigh-cli “https://www.facebook.com/watch/?v=1234” “https://www.youtube.com/watch?v=12345” –output “./output_folder” –language ar
+```
+
+## Logging
+
+tafrigh-cli provides detailed logging throughout the transcription process, including:
+
+    •	Preprocessing progress and completion notifications.
+    •	Transcription progress updates for each chunk.
+    •	Completion messages with the number of chunks transcribed.
+    •	Information on where the output files are written.
 
 ## License
 
-Licensed under the MIT License.
+This project is licensed under the MIT License.
