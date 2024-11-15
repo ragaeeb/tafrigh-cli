@@ -19,6 +19,7 @@ A Command Line Interface (CLI) for using the [tafrigh](https://github.com/ragaee
     •	API key management for wit.ai.
     •	Language-specific API key mapping.
     •	Detailed logging of the transcription process.
+    •	Supports Facebook, YouTube and X (formerly Twitter) media links.
 
 ## Installation
 
@@ -81,12 +82,12 @@ npx tafrigh-cli “https://www.youtube.com/playlist?list=abcd” –output “./
 Next time, run using the saved language-specific API keys:
 
 ```sh
-npx tafrigh-cli “https://www.facebook.com/watch/?v=1234” “https://www.youtube.com/watch?v=12345” –output “./output_folder” –language ar
+npx tafrigh-cli "https://www.facebook.com/watch/?v=1234" "https://www.youtube.com/watch?v=12345" "https://x.com/user/status/12345" –output “./output_folder” –language ar
 ```
 
 ## Logging
 
-tafrigh-cli provides detailed logging throughout the transcription process, including:
+`tafrigh-cli` provides detailed logging throughout the transcription process, including:
 
     •	Preprocessing progress and completion notifications.
     •	Transcription progress updates for each chunk.
