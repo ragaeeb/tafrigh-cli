@@ -3,6 +3,7 @@ import ytpl from '@distube/ytpl';
 // @ts-expect-error: Missing types
 import getFbVideoInfo from 'fb-downloader-scrapper';
 import { URL } from 'node:url';
+import { TwitterDL } from 'twitter-downloader';
 
 export const urlToFilename = (urlString: string): string => {
     const url = new URL(urlString);
@@ -41,10 +42,18 @@ export const collectVideos = async (input: string): Promise<Record<string, strin
             const { url: streamUrl } = ytdl.chooseFormat(info.formats, {
                 filter: 'audioonly',
             });
+
             idToInputSource[videoId] = streamUrl;
-        } else if (url.includes('facebook.com')) {
+        } else if (url.includes('/facebook.com/')) {
             const info = await getFbVideoInfo(url);
             idToInputSource[urlToFilename(url)] = info.sd || info.hd;
+        } else if (url.includes('/x.com/') || url.includes('/twitter.com/')) {
+            const info = await TwitterDL(url);
+            const { videos = [] } = info.result?.media[0] || {};
+
+            if (videos[0]?.url && info.result?.id) {
+                idToInputSource[info.result.id] = videos[0]?.url;
+            }
         }
     }
 
