@@ -25,14 +25,18 @@ export const mapFlagsToOptions = ({
     ];
 };
 
-export const mapFileOrUrlsToInputSources = async (inputs: string[]): Promise<Record<string, string>> => {
-    const idToInputSource: Record<string, string> = {};
+export const mapFileOrUrlsToInputSources = async (inputs: string[]): Promise<Record<string, string[]>> => {
+    const idToInputSource: Record<string, string[]> = {};
 
     for (let input of inputs) {
         if (isValidUrl(input)) {
             Object.assign(idToInputSource, await collectVideos(input));
         } else {
-            Object.assign(idToInputSource, await collectMediaFiles(input));
+            const idToFile: Record<string, string> = await collectMediaFiles(input);
+
+            Object.entries(idToFile).forEach(([id, file]) => {
+                idToInputSource[id] = [file];
+            });
         }
     }
 
