@@ -29,7 +29,9 @@ export const getCliArgs = (): any => {
             type: 'string',
         },
         output: {
-            isRequired: true,
+            isRequired: (_flags: Record<string, string>, input: string[]) => {
+                return input.length > 1;
+            },
             shortflag: 'o',
             type: 'string',
         },

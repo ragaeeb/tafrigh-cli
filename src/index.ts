@@ -34,6 +34,18 @@ const processInput = async (content: string, options: TranscribeFilesOptions) =>
     }
 };
 
+const processInputSources = async (inputs: string[], transcribeOptions: TranscribeFilesOptions) => {
+    for (const input of inputs) {
+        try {
+            await processInput(input, transcribeOptions);
+
+            return;
+        } catch (e) {
+            logger.error(`Could not process ${input} due to ${JSON.stringify(e)}, trying next source`);
+        }
+    }
+};
+
 const main = async () => {
     welcome({
         bgColor: `#FADC00`,
@@ -61,15 +73,15 @@ const main = async () => {
     logger.debug(`idToInputSource ${JSON.stringify(idToInputSource)}`);
 
     if (ids.length === 1) {
-        await processInput(idToInputSource[ids[0]], {
+        await processInputSources(idToInputSource[ids[0]], {
             ...transcribeOptions,
-            outputOptions: { outputFile: cli.flags.output },
+            outputOptions: { outputFile: cli.flags.output || path.format({ ext: '.txt', name: ids[0] }) },
         });
     } else if (ids.length > 1) {
         await fs.mkdir(cli.flags.output, { recursive: true });
 
         for (let id of ids) {
-            await processInput(idToInputSource[id], {
+            await processInputSources(idToInputSource[ids[0]], {
                 ...transcribeOptions,
                 outputOptions: { outputFile: path.format({ dir: cli.flags.output, ext: '.txt', name: id }) },
             });
