@@ -1,8 +1,10 @@
 #!/usr/bin/env bun
 import welcome from 'cli-welcome';
-import { promises as fs } from 'fs';
 import logSymbols from 'log-symbols';
-import path from 'path';
+import { promises as fs } from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import open from 'open';
 import { init, transcribe, TranscribeFilesOptions } from 'tafrigh';
 
 import type { TafrighFlags } from './types.js';
@@ -12,7 +14,7 @@ import logger from './utils/logger.js';
 import { mapFileOrUrlsToInputSources, mapFlagsToOptions } from './utils/optionsMapping.js';
 import { getCliArgs } from './utils/prompt.js';
 
-const processInput = async (content: string, options: TranscribeFilesOptions) => {
+const processInput = async (content: string, options: TranscribeFilesOptions): Promise<string> => {
     const result = await transcribe(content, {
         ...options,
         callbacks: {
@@ -32,14 +34,18 @@ const processInput = async (content: string, options: TranscribeFilesOptions) =>
     } else {
         logger.warn(`${logSymbols.error} Nothing written`);
     }
+
+    return result;
 };
 
-const processInputSources = async (inputs: string[], transcribeOptions: TranscribeFilesOptions) => {
+const processInputSources = async (
+    inputs: string[],
+    transcribeOptions: TranscribeFilesOptions,
+): Promise<string | undefined> => {
     for (const input of inputs) {
         try {
-            await processInput(input, transcribeOptions);
-
-            return;
+            const result = await processInput(input, transcribeOptions);
+            return result;
         } catch (e) {
             logger.error(`Could not process ${input} due to ${JSON.stringify(e)}, trying next source`);
         }
@@ -73,10 +79,17 @@ const main = async () => {
     logger.debug(`idToInputSource ${JSON.stringify(idToInputSource)}`);
 
     if (ids.length === 1) {
-        await processInputSources(idToInputSource[ids[0]], {
+        const result = await processInputSources(idToInputSource[ids[0]], {
             ...transcribeOptions,
-            outputOptions: { outputFile: cli.flags.output || path.format({ ext: '.txt', name: ids[0] }) },
+            lineBreakSecondsThreshold: 5,
+            outputOptions: {
+                outputFile: cli.flags.output || path.format({ dir: os.tmpdir(), ext: '.txt', name: ids[0] }),
+            },
         });
+
+        if (result) {
+            await open(result);
+        }
     } else if (ids.length > 1) {
         await fs.mkdir(cli.flags.output, { recursive: true });
 
@@ -86,6 +99,8 @@ const main = async () => {
                 outputOptions: { outputFile: path.format({ dir: cli.flags.output, ext: '.txt', name: id }) },
             });
         }
+
+        await open(cli.flags.output);
     } else {
         logger.warn(`${logSymbols.error} Nothing written`);
     }
