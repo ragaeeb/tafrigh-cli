@@ -11,7 +11,7 @@ const isValidUrl = (urlString: string): boolean => {
 
 export const mapFlagsToOptions = ({
     flags: { chunkDuration, concurrency, keys },
-}: TafrighFlags): [TafrighOptions, TranscribeFilesOptions] => {
+}: TafrighFlags): [TafrighOptions, Partial<TranscribeFilesOptions>] => {
     return [
         { apiKeys: keys as string[] },
         {
