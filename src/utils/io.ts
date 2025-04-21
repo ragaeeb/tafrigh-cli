@@ -1,6 +1,6 @@
-import { promises as fs } from 'fs';
 import logSymbols from 'log-symbols';
 import mime from 'mime-types';
+import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 import logger from './logger.js';
@@ -32,7 +32,7 @@ export const collectMediaFiles = async (input: string): Promise<Record<string, s
             .map((file) => path.join(input, file))
             .map((file) => path.resolve(file));
 
-        for (let mediaFile of mediaFiles) {
+        for (const mediaFile of mediaFiles) {
             const parsed = path.parse(path.resolve(path.join(mediaFile)));
             idToInputSource[parsed.name] = mediaFile;
         }

@@ -1,11 +1,14 @@
 import logSymbols from 'log-symbols';
 import { green, italic, underline } from 'picocolors';
 
-import { name, version } from '../../package.json';
+import packageJson from '../../package.json' assert { type: 'json' };
+
+const name = packageJson.name;
+const version = packageJson.version;
 
 export const HELP_TEXT = `
 ${logSymbols.info} Usage
-    npx ${italic(name)} [options]
+    bunx ${italic(name)} [options]
 
 ${logSymbols.info} Options
     ${green(underline('chunk-duration'))}   The duration for the chunks that the audio should be chopped into. This is useful if you want to produce smaller segments

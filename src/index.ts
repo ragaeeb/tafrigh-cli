@@ -5,7 +5,8 @@ import { promises as fs } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import open from 'open';
-import { init, transcribe, TranscribeFilesOptions } from 'tafrigh';
+import { formatSegmentsToTimestampedTranscript, markAndCombineSegments, type Segment } from 'paragrafs';
+import { init, transcribe, type TranscribeOptions } from 'tafrigh';
 
 import type { TafrighFlags } from './types.js';
 
@@ -14,7 +15,13 @@ import logger from './utils/logger.js';
 import { mapFileOrUrlsToInputSources, mapFlagsToOptions } from './utils/optionsMapping.js';
 import { getCliArgs } from './utils/prompt.js';
 
-const processInput = async (content: string, options: TranscribeFilesOptions): Promise<string> => {
+type TranscribeFilesOptions = TranscribeOptions & {
+    outputFile: string;
+};
+
+const FILLER_WORDS = ['آآ', 'اه', 'ايه', 'وآآ', 'مم', 'ها'].flatMap((token) => [token, token + '.', token + '?']);
+
+const processInput = async (content: string, options: TranscribeFilesOptions): Promise<string | undefined> => {
     const result = await transcribe(content, {
         ...options,
         callbacks: {
@@ -29,13 +36,22 @@ const processInput = async (content: string, options: TranscribeFilesOptions): P
         },
     });
 
-    if (result) {
-        logger.info(`${logSymbols.success} written ${result}`);
+    if (result.length > 0) {
+        const combinedSegments = markAndCombineSegments(result as Segment[], {
+            fillers: FILLER_WORDS,
+            gapThreshold: 2,
+            maxSecondsPerSegment: 300,
+            minWordsPerSegment: 10,
+        });
+        const formatted = formatSegmentsToTimestampedTranscript(combinedSegments, 30, ({ text }) => text);
+        await fs.writeFile(options.outputFile, formatted);
+
+        logger.info(`${logSymbols.success} written ${options.outputFile}`);
+
+        return options.outputFile;
     } else {
         logger.warn(`${logSymbols.error} Nothing written`);
     }
-
-    return result;
 };
 
 const processInputSources = async (
@@ -81,10 +97,7 @@ const main = async () => {
     if (ids.length === 1) {
         const result = await processInputSources(idToInputSource[ids[0]], {
             ...transcribeOptions,
-            lineBreakSecondsThreshold: 5,
-            outputOptions: {
-                outputFile: cli.flags.output || path.format({ dir: os.tmpdir(), ext: '.txt', name: ids[0] }),
-            },
+            outputFile: cli.flags.output || path.format({ dir: os.tmpdir(), ext: '.txt', name: ids[0] }),
         });
 
         if (result) {
@@ -93,10 +106,10 @@ const main = async () => {
     } else if (ids.length > 1) {
         await fs.mkdir(cli.flags.output, { recursive: true });
 
-        for (let id of ids) {
+        for (const id of ids) {
             await processInputSources(idToInputSource[ids[0]], {
                 ...transcribeOptions,
-                outputOptions: { outputFile: path.format({ dir: cli.flags.output, ext: '.txt', name: id }) },
+                outputFile: path.format({ dir: cli.flags.output, ext: '.txt', name: id }),
             });
         }
 

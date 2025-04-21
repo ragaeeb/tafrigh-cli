@@ -1,4 +1,4 @@
-import { TafrighOptions, TranscribeFilesOptions } from 'tafrigh';
+import { TranscribeOptions } from 'tafrigh';
 
 import { TafrighFlags } from '../types.js';
 import { collectMediaFiles } from './io.js';
@@ -11,7 +11,7 @@ const isValidUrl = (urlString: string): boolean => {
 
 export const mapFlagsToOptions = ({
     flags: { chunkDuration, concurrency, keys },
-}: TafrighFlags): [TafrighOptions, Partial<TranscribeFilesOptions>] => {
+}: TafrighFlags): [{ apiKeys: string[] }, Partial<TranscribeOptions>] => {
     return [
         { apiKeys: keys as string[] },
         {
@@ -28,7 +28,7 @@ export const mapFlagsToOptions = ({
 export const mapFileOrUrlsToInputSources = async (inputs: string[]): Promise<Record<string, string[]>> => {
     const idToInputSource: Record<string, string[]> = {};
 
-    for (let input of inputs) {
+    for (const input of inputs) {
         if (isValidUrl(input)) {
             Object.assign(idToInputSource, await collectVideos(input));
         } else {

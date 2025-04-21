@@ -34,7 +34,7 @@ export const collectVideos = async (input: string): Promise<Record<string, strin
     const videoUrls = await unpackVideosInPlaylist(input);
     const idToInputSource: Record<string, string[]> = {};
 
-    for (let url of videoUrls) {
+    for (const url of videoUrls) {
         if (ytdl.validateURL(url)) {
             const info = await ytdl.getInfo(url);
             const videoId: any = info.player_response.videoDetails.videoId;

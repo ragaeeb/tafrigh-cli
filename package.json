@@ -1,9 +1,9 @@
 {
     "name": "tafrigh-cli",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "description": "CLI for using the tafrigh library.",
     "source": "src/index.ts",
-    "main": "dist/main.js",
+    "main": "dist/index.js",
     "bin": {
         "tafrigh-cli": "./dist/index.js"
     },
@@ -27,34 +27,34 @@
     "author": "Ragaeeb Haq",
     "license": "MIT",
     "dependencies": {
-        "@distube/ytdl-core": "^4.16.5",
+        "@distube/ytdl-core": "^4.16.8",
         "@distube/ytpl": "^1.2.1",
         "cli-welcome": "^3.0.1",
         "conf": "^13.1.0",
         "fb-downloader-scrapper": "^3.0.1",
         "log-symbols": "^7.0.0",
         "meow": "^13.2.0",
-        "mime-types": "^2.1.35",
-        "open": "^10.1.0",
+        "mime-types": "^3.0.1",
+        "open": "^10.1.1",
+        "paragrafs": "^1.1.0",
         "picocolors": "^1.1.1",
         "pino": "^9.6.0",
         "pino-pretty": "^13.0.0",
-        "tafrigh": "^3.0.0",
+        "tafrigh": "^4.0.0",
         "twitter-downloader": "^1.1.8"
     },
     "devDependencies": {
-        "@eslint/js": "^9.23.0",
+        "@eslint/js": "^9.25.1",
         "@semantic-release/changelog": "^6.0.3",
-        "@types/eslint__js": "^9.14.0",
         "@types/mime-types": "^2.1.4",
-        "@types/node": "^22.13.13",
-        "eslint": "^9.23.0",
-        "eslint-config-prettier": "^10.1.1",
-        "eslint-plugin-import": "^2.31.0",
-        "eslint-plugin-perfectionist": "^4.10.1",
-        "eslint-plugin-prettier": "^5.2.5",
+        "@types/node": "^22.14.1",
+        "eslint": "^9.25.0",
+        "eslint-config-prettier": "^10.1.2",
+        "eslint-plugin-perfectionist": "^4.11.0",
+        "eslint-plugin-prettier": "^5.2.6",
+        "globals": "^16.0.0",
         "prettier": "^3.5.3",
         "semantic-release": "^24.2.3",
-        "typescript-eslint": "^8.28.0"
+        "typescript-eslint": "^8.30.1"
     }
 }

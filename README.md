@@ -32,13 +32,13 @@ npm install -g tafrigh-cli
 Alternatively, you can use npx to run it without installing:
 
 ```sh
-npx tafrigh-cli [options]
+bunx tafrigh-cli [options]
 ```
 
 ## Usage
 
 ```sh
-npx tafrigh-cli [options] [inputs]
+bunx tafrigh-cli [options] [inputs]
 ```
 
 ## Options
