@@ -2,6 +2,7 @@ import ytdl from '@distube/ytdl-core';
 import ytpl from '@distube/ytpl';
 import { getFbVideoInfo } from 'fb-downloader-scrapper';
 import { URL } from 'node:url';
+import { findBestDownloadUrl } from 'rabbito';
 import { TwitterDL } from 'twitter-downloader';
 
 export const urlToFilename = (urlString: string): string => {
@@ -37,16 +38,17 @@ export const collectVideos = async (input: string): Promise<Record<string, strin
     for (const url of videoUrls) {
         if (ytdl.validateURL(url)) {
             const info = await ytdl.getInfo(url);
-            const videoId: any = info.player_response.videoDetails.videoId;
-            const { url: streamUrlForAudio } = ytdl.chooseFormat(info.formats, {
-                filter: 'audioonly',
-            });
+            const formats = info.formats.filter(
+                (f) => f.container === 'mp4' && f.hasAudio && !f.isHLS && !f.isDashMPD,
+            );
+        
+            if (formats.length === 0) {
+                throw new Error('No suitable mp4 format found');
+            }
+        
+            const successfulUrl = await findBestDownloadUrl(formats.map((f) => f.url));
 
-            const { url: streamUrlForAudioVideo } = ytdl.chooseFormat(info.formats, {
-                filter: 'audioandvideo',
-            });
-
-            idToInputSource[videoId] = [streamUrlForAudio, streamUrlForAudioVideo];
+            idToInputSource[info.player_response.videoDetails.videoId] = [successfulUrl];
         } else if (url.includes('/facebook.com/')) {
             const info = await getFbVideoInfo(url);
             idToInputSource[urlToFilename(url)] = [info.sd, info.hd];
