@@ -11,6 +11,6 @@
     },
     "files": {
         "ignore": ["dist"],
-        "include": ["src", "tests"]
+        "include": ["src", "tsdown.config.ts"]
     }
 }

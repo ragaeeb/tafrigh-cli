@@ -3,7 +3,7 @@ import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { mapFlagsToOptions, mapFileOrUrlsToInputSources } from '../src/utils/optionsMapping.ts';
+import { mapFlagsToOptions, mapFileOrUrlsToInputSources } from './optionsMapping.ts';
 
 describe('mapFlagsToOptions', () => {
     it('should map cli flags to tafrigh options', () => {

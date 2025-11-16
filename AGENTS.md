@@ -6,7 +6,7 @@ Welcome! This project is a Bun-first CLI that orchestrates transcription jobs th
 
 - `src/index.ts` – CLI entry executed via `bunx tafrigh-cli`. Wiring for `meow`, tafrigh bootstrapping and logging happens here.
 - `src/utils/` – Focused helpers grouped by responsibility (config, prompts, media discovery, filesystem IO, option mapping). Every exported helper needs JSDoc coverage and Bun tests.
-- `tests/` – Bun test suites mirroring the helper modules (e.g. `mediaUtils.test.ts`). Always use `bun:test` with the `it('should …')` naming convention.
+- `src/**/*.test.ts` – Bun test suites co-located with their helpers (e.g. `src/utils/mediaUtils.test.ts`). Always use `bun:test` with the `it('should …')` naming convention so behaviour lives next to the code it protects.
 - `tsdown.config.ts` – Source of truth for bundling. `tsdown` reads this file directly, so keep entrypoints, externals and banners in sync with CLI expectations.
 - `README.md` – Landing page for the CLI. Update feature lists, flag descriptions and workflow notes whenever behaviour changes.
 - `AGENTS.md` – This document. Extend it when you add tooling, conventions or new directories.
@@ -15,11 +15,11 @@ Welcome! This project is a Bun-first CLI that orchestrates transcription jobs th
 
 ## Tooling & workflow
 
-- **Package management:** Bun only. Run `bun install` after editing dependencies. We pin `https-proxy-agent@5.0.1` via overrides to keep `ffmpeg-static` installs happy behind proxies—leave that override alone unless you know what you’re doing.
+- **Package management:** Bun only. Run `bun install` after editing dependencies. We pin `https-proxy-agent@5.0.1` via overrides to keep `ffmpeg-static` installs happy behind proxies and force `env-paths@2.2.1` so the `ffmpeg-static` install script can run in CommonJS mode—leave those overrides alone unless you know what you’re doing.
 - **Dependency updates:** Use `bun update --latest` to stay on the newest stack, then commit both `package.json` and `bun.lock`.
 - **Build:** `bun run build` shells out to `bunx tsdown --config tsdown.config.ts`. `tsdown` injects the Bun shebang via the `banner` config and the `postbuild` script sets the executable bit on `dist/index.js`. Preserve both behaviours whenever you touch build scripts.
 - **Testing:** `bun test`. Add coverage alongside any new exported helper. Mock networked services (tafrigh, YouTube, Facebook, X/Twitter) so the suite runs offline.
-- **Lint/format:** Use Biome through `bun run lint` / `bun run format`. Keep `$schema` on the latest release and include `src` + `tests` only (generated `dist/` stays excluded).
+- **Lint/format:** Use Biome through `bun run lint` / `bun run format`. Keep `$schema` on the latest release and lint `src` plus `tsdown.config.ts` only (generated `dist/` stays excluded).
 
 ## Coding conventions
 

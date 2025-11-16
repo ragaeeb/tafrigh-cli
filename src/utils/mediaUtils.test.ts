@@ -68,7 +68,7 @@ mock.module('twitter-downloader', () => ({
     }),
 }));
 
-const { collectVideos, urlToFilename } = await import('../src/utils/mediaUtils.ts');
+const { collectVideos, urlToFilename } = await import('./mediaUtils.ts');
 
 describe('urlToFilename', () => {
     it('should return query id when present', () => {

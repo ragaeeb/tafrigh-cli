@@ -39,8 +39,8 @@ mock.module('meow', () => ({
     default: (...args: unknown[]) => meowMock(...args),
 }));
 
-const { getCliArgs } = await import('../src/utils/prompt.ts');
-const { getApiKeys } = await import('../src/utils/config.ts');
+const { getCliArgs } = await import('./prompt.ts');
+const { getApiKeys } = await import('./config.ts');
 
 beforeEach(() => {
     store.clear();

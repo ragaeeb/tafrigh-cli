@@ -4,34 +4,35 @@
     "": {
       "name": "tafrigh-cli",
       "dependencies": {
-        "@distube/ytdl-core": "4.16.12",
-        "@distube/ytpl": "^1.2.3",
-        "cli-welcome": "^3.0.1",
-        "conf": "^15.0.2",
-        "fb-downloader-scrapper": "^3.0.1",
-        "log-symbols": "^7.0.1",
-        "meow": "^14.0.0",
-        "mime-types": "^3.0.1",
-        "open": "^11.0.0",
-        "paragrafs": "^1.5.1",
-        "picocolors": "^1.1.1",
-        "pino": "^10.1.0",
-        "pino-pretty": "^13.1.2",
-        "rabbito": "^1.0.0",
-        "tafrigh": "^4.1.0",
-        "twitter-downloader": "^1.1.8",
+        "@distube/ytdl-core": "latest",
+        "@distube/ytpl": "latest",
+        "cli-welcome": "latest",
+        "conf": "latest",
+        "fb-downloader-scrapper": "latest",
+        "log-symbols": "latest",
+        "meow": "latest",
+        "mime-types": "latest",
+        "open": "latest",
+        "paragrafs": "latest",
+        "picocolors": "latest",
+        "pino": "latest",
+        "pino-pretty": "latest",
+        "rabbito": "latest",
+        "tafrigh": "latest",
+        "twitter-downloader": "latest",
       },
       "devDependencies": {
-        "@biomejs/biome": "^2.3.5",
-        "@semantic-release/changelog": "^6.0.3",
-        "@types/mime-types": "^3.0.1",
-        "@types/node": "^24.10.1",
-        "semantic-release": "^25.0.2",
-        "tsdown": "^0.16.4",
+        "@biomejs/biome": "latest",
+        "@semantic-release/changelog": "latest",
+        "@types/mime-types": "latest",
+        "@types/node": "latest",
+        "semantic-release": "latest",
+        "tsdown": "latest",
       },
     },
   },
   "overrides": {
+    "env-paths": "2.2.1",
     "https-proxy-agent": "5.0.1",
   },
   "packages": {
@@ -347,7 +348,7 @@
 
     "env-ci": ["env-ci@11.1.0", "", { "dependencies": { "execa": "^8.0.0", "java-properties": "^1.0.2" } }, "sha512-Z8dnwSDbV1XYM9SBF2J0GcNVvmfmfh3a49qddGIROhBoVro6MZVTji15z/sJbQ2ko2ei8n988EU1wzoLU/tF+g=="],
 
-    "env-paths": ["env-paths@3.0.0", "", {}, "sha512-dtJUTepzMW3Lm/NPxRf3wP4642UWhjL2sQxc+ym2YMj1m/H2zDNQOlezafzkHwn6sMstjHTwG6iQQsctDW/b1A=="],
+    "env-paths": ["env-paths@2.2.1", "", {}, "sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A=="],
 
     "environment": ["environment@1.1.0", "", {}, "sha512-xUtoPkMggbz0MPyPiIWr1Kp4aeWJjDZ6SMvURhimjdZgsRuDplF5/s9hcgGhyXMhs+6vpnuoiZ2kFiu3FMnS8Q=="],
 
@@ -963,8 +964,6 @@
 
     "conventional-commits-parser/meow": ["meow@13.2.0", "", {}, "sha512-pxQJQzB6djGPXh08dacEloMFopsOqGVRKFPYvPOt9XDZ1HasbgDZA74CJGreSU4G3Ak7EFJGoiH2auq+yXISgA=="],
 
-    "cosmiconfig/env-paths": ["env-paths@2.2.1", "", {}, "sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A=="],
-
     "crypto-random-string/type-fest": ["type-fest@1.4.0", "", {}, "sha512-yGSza74xk0UG8k+pLh5oeoYirvIiWo5t0/o3zHHAO2tRDiZcxWP7fywNlXhqb6/r6sWvwi+RsyQMWhVLe4BVuA=="],
 
     "env-ci/execa": ["execa@8.0.1", "", { "dependencies": { "cross-spawn": "^7.0.3", "get-stream": "^8.0.1", "human-signals": "^5.0.0", "is-stream": "^3.0.0", "merge-stream": "^2.0.0", "npm-run-path": "^5.1.0", "onetime": "^6.0.0", "signal-exit": "^4.1.0", "strip-final-newline": "^3.0.0" } }, "sha512-VyhnebXciFV2DESc+p6B+y0LjSm0krU4OgJN44qFAhBY0TJ+1V61tYD2+wHusZ6F9n5K+vl8k0sTy7PEfV4qpg=="],
@@ -974,8 +973,6 @@
     "fdir/picomatch": ["picomatch@4.0.3", "", {}, "sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q=="],
 
     "ffmpeg-simplified/pino": ["pino@9.6.0", "", { "dependencies": { "atomic-sleep": "^1.0.0", "fast-redact": "^3.1.1", "on-exit-leak-free": "^2.1.0", "pino-abstract-transport": "^2.0.0", "pino-std-serializers": "^7.0.0", "process-warning": "^4.0.0", "quick-format-unescaped": "^4.0.3", "real-require": "^0.2.0", "safe-stable-stringify": "^2.3.1", "sonic-boom": "^4.0.1", "thread-stream": "^3.0.0" }, "bin": { "pino": "bin.js" } }, "sha512-i85pKRCt4qMjZ1+L7sy2Ag4t1atFcdbEt76+7iRJn1g2BvsnRMGu9p8pivl9fs63M2kF/A0OacFZhTub+m/qMg=="],
-
-    "ffmpeg-static/env-paths": ["env-paths@2.2.1", "", {}, "sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A=="],
 
     "fluent-ffmpeg/which": ["which@1.3.1", "", { "dependencies": { "isexe": "^2.0.0" }, "bin": { "which": "./bin/which" } }, "sha512-HxJdYWq1MTIQbJ3nw0cqssHoTNU267KlrDuGZ1WYlxDStUtKUhOaJmh112/TZmHxxUfuJqPXSOm7tDyas0OSIQ=="],
 

@@ -3,7 +3,7 @@ import { mkdtemp, writeFile, rm, mkdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { collectMediaFiles, filterMediaFiles } from '../src/utils/io.ts';
+import { collectMediaFiles, filterMediaFiles } from './io.ts';
 
 describe('filterMediaFiles', () => {
     it('should return only audio and video files', () => {

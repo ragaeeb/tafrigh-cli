@@ -104,7 +104,7 @@ bunx tafrigh-cli \
 | `bun run lint` | Lints the project with Biome. |
 | `bun run format` | Formats sources with Biome. |
 
-The bundler configuration lives in `tsdown.config.ts` and is consumed directly by `tsdown`. Unit tests cover the exported utility functions and the CLI argument handling logic to guard regression-prone paths.
+The bundler configuration lives in `tsdown.config.ts` and is consumed directly by `tsdown`. Unit tests live beside their helpers as `src/**/*.test.ts` files so behaviour is verified right next to the implementation.
 
 ## Logging
 

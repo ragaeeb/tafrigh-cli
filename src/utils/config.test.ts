@@ -28,7 +28,7 @@ mock.module('conf', () => ({
     default: FakeConf,
 }));
 
-const { getApiKeys, hasApiKeys, saveApiKeys } = await import('../src/utils/config.ts');
+const { getApiKeys, hasApiKeys, saveApiKeys } = await import('./config.ts');
 
 describe('config', () => {
     beforeEach(() => {
