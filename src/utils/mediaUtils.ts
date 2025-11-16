@@ -5,6 +5,12 @@ import { URL } from 'node:url';
 import { findBestDownloadUrl } from 'rabbito';
 import { TwitterDL } from 'twitter-downloader';
 
+/**
+ * Creates a deterministic filename based on a video URL.
+ *
+ * @param urlString - The original video URL.
+ * @returns A usable identifier derived from the URL.
+ */
 export const urlToFilename = (urlString: string): string => {
     const url = new URL(urlString);
 
@@ -19,8 +25,10 @@ export const urlToFilename = (urlString: string): string => {
 };
 
 /**
- * If the url contains a playlist, it will return all the videos in the playlist, otherwise just the url back
- * @param url
+ * Expands playlist URLs into individual video URLs.
+ *
+ * @param url - The playlist or video URL.
+ * @returns A list of URLs representing all videos to download.
  */
 const unpackVideosInPlaylist = async (url: string): Promise<string[]> => {
     if (url.includes('youtube.com/playlist?list=')) {
@@ -31,6 +39,12 @@ const unpackVideosInPlaylist = async (url: string): Promise<string[]> => {
     return [url];
 };
 
+/**
+ * Resolves a social media URL into downloadable media sources.
+ *
+ * @param input - The URL provided by the user.
+ * @returns A mapping from identifiers to available download URLs.
+ */
 export const collectVideos = async (input: string): Promise<Record<string, string[]>> => {
     const videoUrls = await unpackVideosInPlaylist(input);
     const idToInputSource: Record<string, string[]> = {};
@@ -49,10 +63,10 @@ export const collectVideos = async (input: string): Promise<Record<string, strin
             const successfulUrl = await findBestDownloadUrl(formats.map((f) => f.url));
 
             idToInputSource[info.player_response.videoDetails.videoId] = [successfulUrl];
-        } else if (url.includes('/facebook.com/')) {
+        } else if (url.includes('facebook.com/')) {
             const info = await getFbVideoInfo(url);
             idToInputSource[urlToFilename(url)] = [info.sd, info.hd];
-        } else if (url.includes('/x.com/') || url.includes('/twitter.com/')) {
+        } else if (url.includes('x.com/') || url.includes('twitter.com/')) {
             const info = await TwitterDL(url);
             const { videos = [] } = info.result?.media[0] || {};
 

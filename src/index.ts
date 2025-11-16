@@ -21,6 +21,13 @@ type TranscribeFilesOptions = TranscribeOptions & {
 
 const FILLER_WORDS = ['آآ', 'اه', 'ايه', 'وآآ', 'مم', 'ها'].flatMap((token) => [token, token + '.', token + '?']);
 
+/**
+ * Transcribes a single media input, writes the formatted transcript to disk and returns the file path.
+ *
+ * @param content - The media source to transcribe. This can be a file path or remote URL.
+ * @param options - Combined tafrigh transcription options with output file details.
+ * @returns The path to the written transcript when successful, otherwise `undefined`.
+ */
 const processInput = async (content: string, options: TranscribeFilesOptions): Promise<string | undefined> => {
     const result = await transcribe(content, {
         ...options,
@@ -54,6 +61,13 @@ const processInput = async (content: string, options: TranscribeFilesOptions): P
     }
 };
 
+/**
+ * Iterates over the provided input sources until one is successfully processed.
+ *
+ * @param inputs - Possible media sources to attempt.
+ * @param transcribeOptions - Options to use when transcribing.
+ * @returns The first successfully generated transcript path, or `undefined` if all inputs fail.
+ */
 const processInputSources = async (
     inputs: string[],
     transcribeOptions: TranscribeFilesOptions,
@@ -68,6 +82,9 @@ const processInputSources = async (
     }
 };
 
+/**
+ * CLI entry point responsible for orchestrating user interaction and transcription.
+ */
 const main = async () => {
     welcome({
         bgColor: `#FADC00`,
