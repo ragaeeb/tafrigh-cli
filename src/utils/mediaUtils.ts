@@ -1,9 +1,13 @@
-import ytdl from '@distube/ytdl-core';
-import ytpl from '@distube/ytpl';
-import { getFbVideoInfo } from 'fb-downloader-scrapper';
 import { URL } from 'node:url';
+import { getFbVideoInfo } from 'fb-downloader-scrapper';
 import { findBestDownloadUrl } from 'rabbito';
 import { TwitterDL } from 'twitter-downloader';
+
+import * as youtubedlExec from 'youtube-dl-exec';
+
+// Use global yt-dlp if package binary not found
+const { create } = youtubedlExec as any;
+const youtubedl = create('yt-dlp');
 
 /**
  * Creates a deterministic filename based on a video URL.
@@ -25,18 +29,38 @@ export const urlToFilename = (urlString: string): string => {
 };
 
 /**
- * Expands playlist URLs into individual video URLs.
+ * Expands playlist URLs into individual video URLs using yt-dlp.
  *
  * @param url - The playlist or video URL.
  * @returns A list of URLs representing all videos to download.
  */
 const unpackVideosInPlaylist = async (url: string): Promise<string[]> => {
     if (url.includes('youtube.com/playlist?list=')) {
-        const info = await ytpl(url);
-        return info.items.map((video) => (video as any).shortUrl as string);
+        const result: any = await youtubedl(url, {
+            dumpSingleJson: true,
+            flatPlaylist: true,
+            noWarnings: true,
+        });
+
+        // yt-dlp returns playlist entries in the 'entries' field
+        if (result.entries && Array.isArray(result.entries)) {
+            return result.entries
+                .filter((entry: any) => entry.url || entry.id)
+                .map((entry: any) => entry.url || `https://www.youtube.com/watch?v=${entry.id}`);
+        }
     }
 
     return [url];
+};
+
+/**
+ * Checks if a URL is a valid YouTube URL.
+ *
+ * @param url - The URL to validate.
+ * @returns True if it's a YouTube URL.
+ */
+const isYouTubeUrl = (url: string): boolean => {
+    return url.includes('youtube.com/') || url.includes('youtu.be/');
 };
 
 /**
@@ -50,19 +74,31 @@ export const collectVideos = async (input: string): Promise<Record<string, strin
     const idToInputSource: Record<string, string[]> = {};
 
     for (const url of videoUrls) {
-        if (ytdl.validateURL(url)) {
-            const info = await ytdl.getInfo(url);
-            const formats = info.formats.filter(
-                (f) => f.container === 'mp4' && f.hasAudio && !f.isHLS && !f.isDashMPD,
-            );
-        
-            if (formats.length === 0) {
-                throw new Error('No suitable mp4 format found');
-            }
-        
-            const successfulUrl = await findBestDownloadUrl(formats.map((f) => f.url));
+        if (isYouTubeUrl(url)) {
+            const info: any = await youtubedl(url, {
+                dumpSingleJson: true,
+                format: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+                noCheckCertificates: true,
+                noWarnings: true,
+                preferFreeFormats: true,
+            });
 
-            idToInputSource[info.player_response.videoDetails.videoId] = [successfulUrl];
+            // Extract formats with both audio and video
+            const formats =
+                info.formats?.filter((f: any) => f.ext === 'mp4' && f.acodec !== 'none' && f.vcodec !== 'none') || [];
+
+            if (formats.length === 0) {
+                // Fallback: use the direct URL from info
+                if (info.url) {
+                    idToInputSource[info.id] = [info.url];
+                } else {
+                    throw new Error('No suitable mp4 format found');
+                }
+            } else {
+                const urls = formats.map((f: any) => f.url).filter(Boolean);
+                const successfulUrl = await findBestDownloadUrl(urls);
+                idToInputSource[info.id] = [successfulUrl];
+            }
         } else if (url.includes('facebook.com/')) {
             const info = await getFbVideoInfo(url);
             idToInputSource[urlToFilename(url)] = [info.sd, info.hd];

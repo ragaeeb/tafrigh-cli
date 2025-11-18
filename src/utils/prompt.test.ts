@@ -1,4 +1,4 @@
-import { describe, it, expect, mock, beforeEach, afterEach } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test';
 
 type Store = Map<string, string[]>;
 const store: Store = (globalThis as { __confStore?: Store }).__confStore ?? new Map();

@@ -1,12 +1,11 @@
-#!/usr/bin/env bun
-import welcome from 'cli-welcome';
-import logSymbols from 'log-symbols';
 import { promises as fs } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import welcome from 'cli-welcome';
+import logSymbols from 'log-symbols';
 import open from 'open';
 import { formatSegmentsToTimestampedTranscript, markAndCombineSegments, type Segment } from 'paragrafs';
-import { init, transcribe, type TranscribeOptions } from 'tafrigh';
+import { init, type TranscribeOptions, transcribe } from 'tafrigh';
 
 import type { TafrighFlags } from './types.js';
 
@@ -19,7 +18,7 @@ type TranscribeFilesOptions = TranscribeOptions & {
     outputFile: string;
 };
 
-const FILLER_WORDS = ['آآ', 'اه', 'ايه', 'وآآ', 'مم', 'ها'].flatMap((token) => [token, token + '.', token + '?']);
+const FILLER_WORDS = ['آآ', 'اه', 'ايه', 'وآآ', 'مم', 'ها'].flatMap((token) => [token, `${token}.`, `${token}?`]);
 
 /**
  * Transcribes a single media input, writes the formatted transcript to disk and returns the file path.

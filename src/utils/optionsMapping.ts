@@ -1,6 +1,6 @@
-import { TranscribeOptions } from 'tafrigh';
+import type { TranscribeOptions } from 'tafrigh';
 
-import { TafrighFlags } from '../types.js';
+import type { TafrighFlags } from '../types.js';
 import { collectMediaFiles } from './io.js';
 import { collectVideos } from './mediaUtils.js';
 
