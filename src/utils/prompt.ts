@@ -3,6 +3,11 @@ import meow from 'meow';
 import { getApiKeys, hasApiKeys, saveApiKeys } from './config.js';
 import { HELP_TEXT } from './constants.js';
 
+/**
+ * Parses CLI arguments, persisting API keys when supplied.
+ *
+ * @returns The parsed meow result containing flags and input arguments.
+ */
 export const getCliArgs = (): any => {
     const myFlags = {
         chunkDuration: {

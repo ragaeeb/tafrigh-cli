@@ -14,13 +14,13 @@ jobs:
             pull-requests: none
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
               with:
                   fetch-depth: 0
                   persist-credentials: true
 
             - name: Use Node.js 23.x
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v6
               with:
                   node-version: 23.x
 
@@ -36,7 +36,7 @@ jobs:
               run: bun run build
 
             - name: Run Semantic Release
-              run: npx semantic-release
+              run: bun x semantic-release
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NPM_TOKEN: ${{ secrets.PUBLISH_NPM_TOKEN }}

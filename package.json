@@ -1,20 +1,46 @@
 {
-    "name": "tafrigh-cli",
-    "version": "1.4.2",
-    "description": "CLI for using the tafrigh library.",
-    "source": "src/index.ts",
-    "main": "dist/index.js",
+    "author": "Ragaeeb Haq",
     "bin": {
-        "tafrigh-cli": "./dist/index.js"
+        "tafrigh-cli": "./dist/index.mjs"
     },
-    "type": "module",
-    "scripts": {
-        "start": "bun run src/index.ts",
-        "build": "NODE_ENV=production bun build src/index.ts --outdir dist --target node --packages=external",
-        "compile": "NODE_ENV=production bun build src/index.ts --target node --compile --outfile dist/tafrigh-cli"
+    "bugs": {
+        "url": "https://github.com/ragaeeb/tafrigh-cli/issues"
+    },
+    "dependencies": {
+        "cli-welcome": "^3.0.1",
+        "conf": "^15.0.2",
+        "fb-downloader-scrapper": "^3.0.1",
+        "log-symbols": "^7.0.1",
+        "meow": "^14.0.0",
+        "mime-types": "^3.0.1",
+        "open": "^11.0.0",
+        "paragrafs": "^1.5.1",
+        "picocolors": "^1.1.1",
+        "pino": "^10.1.0",
+        "pino-pretty": "^13.1.2",
+        "rabbito": "^1.0.0",
+        "tafrigh": "^4.1.1",
+        "twitter-downloader": "^1.1.8",
+        "youtube-dl-exec": "^3.0.26"
+    },
+    "description": "CLI for using the tafrigh library.",
+    "devDependencies": {
+        "@biomejs/biome": "^2.3.6",
+        "@semantic-release/changelog": "^6.0.3",
+        "@types/bun": "^1.3.2",
+        "@types/mime-types": "^3.0.1",
+        "@types/node": "^24.10.1",
+        "semantic-release": "^25.0.2",
+        "tsdown": "^0.16.5"
+    },
+    "engines": {
+        "bun": ">=1.3.2",
+        "node": ">=22.0.0"
     },
     "files": [
-        "dist/index.js"
+        "dist",
+        "README.md",
+        "LICENSE.md"
     ],
     "keywords": [
         "srt",
@@ -24,38 +50,18 @@
         "video",
         "nodejs"
     ],
-    "author": "Ragaeeb Haq",
     "license": "MIT",
-    "dependencies": {
-        "@distube/ytdl-core": "4.16.8",
-        "@distube/ytpl": "^1.2.1",
-        "cli-welcome": "^3.0.1",
-        "conf": "^13.1.0",
-        "fb-downloader-scrapper": "^3.0.1",
-        "log-symbols": "^7.0.0",
-        "meow": "^13.2.0",
-        "mime-types": "^3.0.1",
-        "open": "^10.1.2",
-        "paragrafs": "^1.3.0",
-        "picocolors": "^1.1.1",
-        "pino": "^9.6.0",
-        "pino-pretty": "^13.0.0",
-        "rabbito": "^1.0.0",
-        "tafrigh": "^4.0.2",
-        "twitter-downloader": "^1.1.8"
+    "main": "dist/index.mjs",
+    "name": "tafrigh-cli",
+    "packageManager": "bun@1.3.2",
+    "scripts": {
+        "build": "tsdown",
+        "format": "bunx biome format .",
+        "lint": "biome check .",
+        "start": "bun run src/index.ts"
     },
-    "devDependencies": {
-        "@eslint/js": "^9.25.1",
-        "@semantic-release/changelog": "^6.0.3",
-        "@types/mime-types": "^2.1.4",
-        "@types/node": "^22.15.3",
-        "eslint": "^9.25.1",
-        "eslint-config-prettier": "^10.1.2",
-        "eslint-plugin-perfectionist": "^4.12.3",
-        "eslint-plugin-prettier": "^5.2.6",
-        "globals": "^16.0.0",
-        "prettier": "^3.5.3",
-        "semantic-release": "^24.2.3",
-        "typescript-eslint": "^8.31.1"
-    }
+    "source": "src/index.ts",
+    "type": "module",
+    "types": "dist/index.d.mts",
+    "version": "1.4.3"
 }

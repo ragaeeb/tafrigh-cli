@@ -1,7 +1,7 @@
 import logSymbols from 'log-symbols';
 import { green, italic, underline } from 'picocolors';
 
-import packageJson from '../../package.json' assert { type: 'json' };
+import packageJson from '@/../../package.json' with { type: 'json' };
 
 const name = packageJson.name;
 const version = packageJson.version;

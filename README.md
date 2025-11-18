@@ -1,99 +1,128 @@
 # tafrigh-cli
 
 [![wakatime](https://wakatime.com/badge/user/a0b906ce-b8e7-4463-8bce-383238df6d4b/project/3ab8ca50-a24a-46b4-af93-e8a6a55f670a.svg)](https://wakatime.com/badge/user/a0b906ce-b8e7-4463-8bce-383238df6d4b/project/3ab8ca50-a24a-46b4-af93-e8a6a55f670a)
+[![codecov](https://codecov.io/gh/ragaeeb/tafrigh-cli/graph/badge.svg?token=HB4LMNIH7Z)](https://codecov.io/gh/ragaeeb/tafrigh-cli)
 [![Node.js CI](https://github.com/ragaeeb/tafrigh-cli/actions/workflows/build.yml/badge.svg)](https://github.com/ragaeeb/tafrigh-cli/actions/workflows/build.yml)
 ![GitHub License](https://img.shields.io/github/license/ragaeeb/tafrigh-cli)
 ![GitHub Release](https://img.shields.io/github/v/release/ragaeeb/tafrigh-cli)
 ![typescript](https://badgen.net/badge/icon/typescript?icon=typescript&label&color=blue)
 
-A Command Line Interface (CLI) for using the [tafrigh](https://github.com/ragaeeb/tafrigh) library, enabling transcription of audio and video files, including YouTube videos, Facebook videos, and local media files.
+`tafrigh-cli` is a Bun-powered command-line interface for the [tafrigh](https://github.com/ragaeeb/tafrigh) transcription engine. It orchestrates downloading media, chunking audio, performing speech-to-text and formatting transcripts for rapid review.
 
-## Features
+The CLI is composed of small utilities documented with JSDoc and individually tested so that media discovery, option parsing and configuration persistence remain easy to maintain. The sections below highlight the most frequently used modules when extending the tool.
 
-    •	Transcribe audio and video files.
-    •	Support for YouTube videos and playlists.
-    •	Support for Facebook videos.
-    •	Support for local media files and directories.
-    •	Customizable chunk duration for splitting audio.
-    •	Concurrent processing with adjustable number of threads.
-    •	API key management for wit.ai.
-    •	Language-specific API key mapping.
-    •	Detailed logging of the transcription process.
-    •	Supports Facebook, YouTube and X (formerly Twitter) media links.
+## Feature highlights
+
+- 🎯 **Broad input support** – Local files & folders, YouTube videos/playlists, Facebook and X (Twitter) URLs.
+- 🪄 **Automatic media discovery** – Fetches the best downloadable sources for supported platforms via yt-dlp.
+- ⚙️ **Configurable processing** – Control chunk duration and concurrency for tafrigh workloads.
+- 🔑 **Persistent wit.ai credentials** – Securely stores API keys per language via `conf`.
+- 📄 **Structured transcripts** – Produces timestamped, filler-aware transcripts ready for editors.
+- 🪵 **Rich logging** – Uses `pino` + `pino-pretty` for actionable CLI feedback.
+
+### Key modules
+
+| Location | Purpose |
+| --- | --- |
+| `src/index.ts` | CLI entrypoint that wires `meow` options to tafrigh execution. |
+| `src/utils/mediaUtils.ts` | Detects supported URLs, crawls playlists and discovers download targets using yt-dlp. |
+| `src/utils/optionsMapping.ts` | Normalizes CLI flags into tafrigh-friendly option objects. |
+| `src/utils/config.ts` | Persists per-language wit.ai credentials using `conf`. |
+| `src/utils/io.ts` | File system helpers for globbing media, verifying paths and ensuring output folders exist. |
+| `src/utils/prompt.ts` | Simplified prompt helpers for collecting credentials interactively. |
+
+## Requirements
+
+- **Bun** 1.3.2 or later
+- **Node.js** 22.0.0 or later (for compatibility)
+- **Python** 3.7+ available as `python3` in your system PATH (required by yt-dlp)
+
+The CLI uses `youtube-dl-exec` which wraps [yt-dlp](https://github.com/yt-dlp/yt-dlp) for YouTube downloads. The yt-dlp binary is auto-installed during `bun install`, but you can also use a global installation.
 
 ## Installation
 
-You can install tafrigh-cli globally using npm:
+Install dependencies with Bun:
 
 ```sh
-npm install -g tafrigh-cli
+bun install
 ```
 
-Alternatively, you can use npx to run it without installing:
+To run the CLI without installing globally, use `bunx`:
 
 ```sh
-bunx tafrigh-cli [options]
+bunx tafrigh-cli --help
 ```
 
 ## Usage
 
 ```sh
-bunx tafrigh-cli [options] [inputs]
+bunx tafrigh-cli [options] <inputs...>
 ```
 
-## Options
+### Common options
 
-Option Alias Description
-`–chunk-duration` `-d` The duration (in seconds) for splitting the audio into chunks. Useful for producing smaller segments. Default is 300 seconds.
-`–concurrency` `-c` The number of threads to use for processing the OCR. Higher values increase CPU usage.
-`–keys` `-k` The API keys for wit.ai. Provide multiple keys by repeating the flag. Once set, keys are saved and do not need to be provided again. Can be mapped to specific languages using the `–language` flag.
-`–language` `-l` The language code to map specific API keys. Allows different API keys for different languages. Default is `global`, representing universal API keys.
-`–output` `-o` The output file or directory for the transcriptions. If transcribing a single media file, specify a file with a `.txt` or `.json` extension. For multiple medias, specify a directory.
+| Flag | Alias | Description |
+| --- | --- | --- |
+| `--chunk-duration` | `-d` | Split audio into fixed-size segments (seconds). Default: `300`. |
+| `--concurrency` | `-c` | Number of tafrigh worker threads. |
+| `--keys` | `-k` | wit.ai API keys. Repeat flag for multiple keys. Persisted per language. |
+| `--language` | `-l` | Namespace API keys for a locale. Default: `global`. |
+| `--output` | `-o` | Output file (single input) or directory (multiple inputs). |
 
-## Inputs
+### Supported inputs
 
-You can provide multiple inputs to `tafrigh-cli`, including:
+- Absolute/relative paths to media files.
+- Directories containing audio/video files.
+- YouTube video links or playlists.
+- Facebook video URLs.
+- X (Twitter) video URLs.
 
-    •	YouTube videos and playlists.
-    •	Facebook videos.
-    •	Local media files.
-    •	Directories containing media files.
+### Examples
 
-## Examples
-
-Transcribe a local video file with specified API keys:
+Transcribe a local video and open the output automatically:
 
 ```sh
-npx tafrigh-cli “tmp/video.mp4” –output “./transcript.txt” –keys “ABCD” –keys “EFG”
+bunx tafrigh-cli "./video.mp4" --output "./transcript.txt" --keys "ABC" --keys "DEF"
 ```
 
-After setting the API keys, you can run without specifying them again:
+Process an entire playlist using Arabic-specific keys:
 
 ```sh
-npx tafrigh-cli “tmp/video.mp4” –output “./transcript.txt”
+bunx tafrigh-cli "https://www.youtube.com/playlist?list=abcd" \
+  --output "./transcripts" \
+  --language ar \
+  --keys "XYZ"
 ```
 
-Transcribe a YouTube playlist with language-specific API keys:
+Reuse stored keys for multiple mixed sources:
 
 ```sh
-npx tafrigh-cli “https://www.youtube.com/playlist?list=abcd” –output “./output_folder/1.txt” –language ar –keys “XYZ”
+bunx tafrigh-cli \
+  "https://www.facebook.com/watch/?v=1234" \
+  "https://www.youtube.com/watch?v=5678" \
+  "https://x.com/user/status/9012" \
+  --output "./batch-output"
 ```
 
-Next time, run using the saved language-specific API keys:
+## Development workflow
 
-```sh
-npx tafrigh-cli "https://www.facebook.com/watch/?v=1234" "https://www.youtube.com/watch?v=12345" "https://x.com/user/status/12345" –output “./output_folder” –language ar
-```
+| Command | Description |
+| --- | --- |
+| `bun run build` | Bundles the CLI through `tsdown` using `tsdown.config.ts`. |
+| `bun test` | Runs the Bun test suite (`bun:test`). |
+| `bun run lint` | Lints the project with Biome. |
+| `bun run format` | Formats sources with Biome. |
+
+The bundler configuration lives in `tsdown.config.ts` and is consumed directly by `tsdown`. Unit tests live beside their helpers as `src/**/*.test.ts` files so behaviour is verified right next to the implementation.
 
 ## Logging
 
-`tafrigh-cli` provides detailed logging throughout the transcription process, including:
+The CLI emits structured logs describing preprocessing, transcription progress and output destinations. Adjust `LOG_LEVEL` to change verbosity.
 
-    •	Preprocessing progress and completion notifications.
-    •	Transcription progress updates for each chunk.
-    •	Completion messages with the number of chunks transcribed.
-    •	Information on where the output files are written.
+## Migration Notes
+
+**v1.4.3+**: Migrated from `@distube/ytdl-core` and `@distube/ytpl` to `youtube-dl-exec` for improved reliability and active maintenance. This requires Python 3.7+ for yt-dlp to function.
 
 ## License
 
-This project is licensed under the MIT License.
+MIT © Ragaeeb Haq
