@@ -1,19 +1,8 @@
+import { URL } from 'node:url';
 import type { TranscribeOptions } from 'tafrigh';
-
 import type { TafrighFlags } from '../types.js';
 import { collectMediaFiles } from './io.js';
 import { collectVideos } from './mediaUtils.js';
-
-/**
- * Determines whether a string resembles a valid URL.
- *
- * @param urlString - The string to validate.
- * @returns True when the string matches the URL pattern, otherwise false.
- */
-const isValidUrl = (urlString: string): boolean => {
-    const urlRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d+)?(\/[^\s]*)?$/;
-    return urlRegex.test(urlString);
-};
 
 /**
  * Maps CLI flags to tafrigh initialisation and transcription options.
@@ -47,7 +36,7 @@ export const mapFileOrUrlsToInputSources = async (inputs: string[]): Promise<Rec
     const idToInputSource: Record<string, string[]> = {};
 
     for (const input of inputs) {
-        if (isValidUrl(input)) {
+        if (URL.canParse(input)) {
             Object.assign(idToInputSource, await collectVideos(input));
         } else {
             const idToFile: Record<string, string> = await collectMediaFiles(input);

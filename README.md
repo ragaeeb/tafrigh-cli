@@ -6,14 +6,14 @@
 ![GitHub Release](https://img.shields.io/github/v/release/ragaeeb/tafrigh-cli)
 ![typescript](https://badgen.net/badge/icon/typescript?icon=typescript&label&color=blue)
 
-`tafrigh-cli` is a Bun-powered command line interface for the [tafrigh](https://github.com/ragaeeb/tafrigh) transcription engine. It orchestrates downloading media, chunking audio, performing speech-to-text and formatting transcripts for rapid review.
+`tafrigh-cli` is a Bun-powered command-line interface for the [tafrigh](https://github.com/ragaeeb/tafrigh) transcription engine. It orchestrates downloading media, chunking audio, performing speech-to-text and formatting transcripts for rapid review.
 
 The CLI is composed of small utilities documented with JSDoc and individually tested so that media discovery, option parsing and configuration persistence remain easy to maintain. The sections below highlight the most frequently used modules when extending the tool.
 
 ## Feature highlights
 
 - 🎯 **Broad input support** – Local files & folders, YouTube videos/playlists, Facebook and X (Twitter) URLs.
-- 🪄 **Automatic media discovery** – Fetches the best downloadable sources for supported platforms.
+- 🪄 **Automatic media discovery** – Fetches the best downloadable sources for supported platforms via yt-dlp.
 - ⚙️ **Configurable processing** – Control chunk duration and concurrency for tafrigh workloads.
 - 🔑 **Persistent wit.ai credentials** – Securely stores API keys per language via `conf`.
 - 📄 **Structured transcripts** – Produces timestamped, filler-aware transcripts ready for editors.
@@ -24,15 +24,23 @@ The CLI is composed of small utilities documented with JSDoc and individually te
 | Location | Purpose |
 | --- | --- |
 | `src/index.ts` | CLI entrypoint that wires `meow` options to tafrigh execution. |
-| `src/utils/mediaUtils.ts` | Detects supported URLs, crawls playlists and discovers download targets. |
+| `src/utils/mediaUtils.ts` | Detects supported URLs, crawls playlists and discovers download targets using yt-dlp. |
 | `src/utils/optionsMapping.ts` | Normalizes CLI flags into tafrigh-friendly option objects. |
 | `src/utils/config.ts` | Persists per-language wit.ai credentials using `conf`. |
 | `src/utils/io.ts` | File system helpers for globbing media, verifying paths and ensuring output folders exist. |
 | `src/utils/prompt.ts` | Simplified prompt helpers for collecting credentials interactively. |
 
+## Requirements
+
+- **Bun** 1.3.2 or later
+- **Node.js** 22.0.0 or later (for compatibility)
+- **Python** 3.7+ available as `python3` in your system PATH (required by yt-dlp)
+
+The CLI uses `youtube-dl-exec` which wraps [yt-dlp](https://github.com/yt-dlp/yt-dlp) for YouTube downloads. The yt-dlp binary is auto-installed during `bun install`, but you can also use a global installation.
+
 ## Installation
 
-The project now uses **Bun** as its package manager. Install dependencies with:
+Install dependencies with Bun:
 
 ```sh
 bun install
@@ -109,6 +117,10 @@ The bundler configuration lives in `tsdown.config.ts` and is consumed directly b
 ## Logging
 
 The CLI emits structured logs describing preprocessing, transcription progress and output destinations. Adjust `LOG_LEVEL` to change verbosity.
+
+## Migration Notes
+
+**v1.4.3+**: Migrated from `@distube/ytdl-core` and `@distube/ytpl` to `youtube-dl-exec` for improved reliability and active maintenance. This requires Python 3.7+ for yt-dlp to function.
 
 ## License
 

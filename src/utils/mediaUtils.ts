@@ -92,7 +92,7 @@ export const collectVideos = async (input: string): Promise<Record<string, strin
                 if (info.url) {
                     idToInputSource[info.id] = [info.url];
                 } else {
-                    throw new Error('No suitable mp4 format found');
+                    throw new Error(`No suitable mp4 format found for ${url} (id: ${info.id})`);
                 }
             } else {
                 const urls = formats.map((f: any) => f.url).filter(Boolean);
