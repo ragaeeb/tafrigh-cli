@@ -1,6 +1,7 @@
 # tafrigh-cli
 
 [![wakatime](https://wakatime.com/badge/user/a0b906ce-b8e7-4463-8bce-383238df6d4b/project/3ab8ca50-a24a-46b4-af93-e8a6a55f670a.svg)](https://wakatime.com/badge/user/a0b906ce-b8e7-4463-8bce-383238df6d4b/project/3ab8ca50-a24a-46b4-af93-e8a6a55f670a)
+[![codecov](https://codecov.io/gh/ragaeeb/tafrigh-cli/graph/badge.svg?token=HB4LMNIH7Z)](https://codecov.io/gh/ragaeeb/tafrigh-cli)
 [![Node.js CI](https://github.com/ragaeeb/tafrigh-cli/actions/workflows/build.yml/badge.svg)](https://github.com/ragaeeb/tafrigh-cli/actions/workflows/build.yml)
 ![GitHub License](https://img.shields.io/github/license/ragaeeb/tafrigh-cli)
 ![GitHub Release](https://img.shields.io/github/v/release/ragaeeb/tafrigh-cli)
